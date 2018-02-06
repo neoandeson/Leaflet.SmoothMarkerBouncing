@@ -35,6 +35,7 @@
     "leaflet": "1.2.0"
   },
   "scripts": {
+    "compile": "babel src --out-dir dist",
     "test": "ava"
   },
   "ava": {

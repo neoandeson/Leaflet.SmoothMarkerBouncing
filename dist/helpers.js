@@ -3,8 +3,15 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.helpers = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _leaflet = require('leaflet');
+
+var _leaflet2 = _interopRequireDefault(_leaflet);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -20,7 +27,7 @@ var css3Transforms = {
 };
 
 /** CSS3 transform property for this browser. */
-var transformProperty = css3Transforms[L.DomUtil.TRANSFORM];
+var transformProperty = css3Transforms[_leaflet2.default.DomUtil.TRANSFORM];
 
 var helpers = exports.helpers = function () {
     function helpers() {
@@ -36,7 +43,7 @@ var helpers = exports.helpers = function () {
          * @param cssText {string}  cssText string
          * @return {object} object with style definitions as keys
          */
-        value: function parseCssText() {
+        value: function parseCssText(cssText) {
             var styleDefinitions = {},
                 match = regStyle.exec(cssText);
 
