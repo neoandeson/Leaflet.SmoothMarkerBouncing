@@ -24,3 +24,13 @@ test('Tests marker#setBouncingOptions', t => {
         exclusive: true
     });
 });
+
+test('Tests Marker#setBouncingOptions', t => {
+
+    // Given
+
+    // When
+
+    // Then
+    t.pass();
+});
