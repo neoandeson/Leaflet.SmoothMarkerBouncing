@@ -324,3 +324,16 @@ test('Test calculateDelays', t => {
         346
     ]);
 });
+
+test('Test calculateTimeline', t => {
+
+    // Given
+    const marker = L.marker([48.847547, 2.351074]);
+
+    // When
+    Helpers.calculateTimeline(marker);
+
+    // Then
+    console.log(marker);
+    t.pass();
+});
