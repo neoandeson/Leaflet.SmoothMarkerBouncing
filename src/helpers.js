@@ -1,8 +1,9 @@
 import L from 'leaflet';
 
-const regStyle = /([\w-]+): ([^;]+);/g;     // regex to parse style definitions
+/** Regex to parse style definitions. */
+const regStyle = /([\w-]+): ([^;]+);/g;
 
-/* CSS3 transform properties for different browsers */
+/** CSS3 transform properties for different browsers. */
 const css3Transforms = {
     transform : 'transform',
     WebkitTransform : '-webkit-transform',
@@ -14,6 +15,7 @@ const css3Transforms = {
 /** CSS3 transform property for this browser. */
 const transformProperty = css3Transforms[L.DomUtil.TRANSFORM];
 
+// TODO: check if this cache working right (keys don't need prefix)
 const bouncingMotionsCache = {};
 
 /**
@@ -146,4 +148,187 @@ export function calculateShadowMovePoints(x, y, bounceHeight, angle) {
 
         return p;
     }
+}
+
+/**
+ * Returns calculated array of transformation definitions for the animation of icon movement.
+ * Function defines one transform for every pixel of shift of the icon from it's original y
+ * position.
+ *
+ * @param x {number}  x coordinate of original position of the marker
+ * @param y {number}  y coordinate of original position of the marker
+ * @param bounceHeight {number}  height of bouncing (px)
+ *
+ * @return {string[]} array of transformation definitions
+ */
+export function calculateIconMoveTransforms(x, y, bounceHeight) {
+    let t = [],     // array of transformations
+        dY = bounceHeight + 1;      // delta Y
+
+    // Use fast inverse while loop to fill the array
+    while (dY--) {
+
+        // Use matrix3d for hardware acceleration
+        t[dY] = ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,' + x + ',' + (y - dY) + ',0,1) ';
+    }
+
+    return t;
+}
+
+/**
+ * Returns calculated array of transformation definitions for the animation of shadow movement.
+ * Function defines one transform for every pixel of shift of the shadow from it's original
+ * position.
+ *
+ * @param x {number}  x coordinate of original position of marker
+ * @param y {number}  y coordinate of original position of marker
+ * @param bounceHeight {number}  height of bouncing (px)
+ * @param angle {number}  shadow inclination angle, if null shadow don't moves from it's initial
+ *      position (radians)
+ *
+ * @return {string[]} array of transformation definitions
+ */
+export function calculateShadowMoveTransforms(x, y, bounceHeight, angle) {
+    // TODO: check this method to know if bounceHeight + 1 is normal
+    let t = [],     // array of transformation definitions
+        dY = bounceHeight + 1,      // delta Y
+        p = [];
+
+    if (angle != null) {  // important: 0 is not null
+        p = calculateLine(x, y, angle, bounceHeight + 1);
+    } else {
+        for (let i = 0; i <= bounceHeight; i++) {
+            p[i] = [x, y];
+        }
+    }
+
+    // Use fast inverse while loop to fill the array
+    while (dY--) {
+
+        // Use matrix3d for hardware acceleration
+        t[dY] = ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,' + p[dY][0] + ',' + p[dY][1] + ',0,1) ';
+    }
+
+    return t;
+}
+
+/**
+ * Returns calculated array of transformation definitions for the animation of icon resizing.
+ * Function defines one transform for every pixel of resizing of marker from it's original height.
+ *
+ * @param x {number}  x coordinate of original position of marker
+ * @param y {number}  y coordinate of original position of marker
+ * @param height {number}  original marker height (px)
+ * @param contractHeight {number}  height of marker contraction (px)
+ *
+ * @return {string[]} array of transformation definitions
+ */
+export function calculateIconResizeTransforms(x, y, height, contractHeight) {
+    let t = [],     // array of transformations
+        dH = contractHeight + 1;    // delta of height
+
+    // Use fast inverse while loop to fill the array
+    while (dH--) {
+
+        // Use matrix3d for hardware acceleration
+        t[dH] = ' matrix3d(1,0,0,0,0,' + ((height - dH) / height) + ',0,0,0,0,1,0,' + x + ','
+            + (y + dH) + ',0,1) ';
+    }
+
+    return t;
+}
+
+/**
+ * Returns calculated array of animation steps. This function used to calculate both movement and
+ * resizing animations. Arrays of steps are then cached in bouncingMotionsCache. Function checks
+ * this cache before make any calculations.
+ *
+ * @param height {number}  height of movement or resizing (px)
+ * @param prefix {string}  prefix of the key in the cache. Must be any string with trailing "_"
+ *      character.
+ *
+ * @return {number[]} array of animation steps
+ */
+export function calculateSteps(height, prefix) {
+    let key = prefix + height,
+        steps = [],
+        i;
+
+    // Check the cache
+    if (bouncingMotionsCache[key]) {
+        return bouncingMotionsCache[key];
+    }
+
+    /* Calculate the sequence of animation steps:
+     * steps = [1 .. height] concat [height-1 .. 0]
+     */
+    i = 1;
+    while (i <= height) {
+        steps.push(i++);
+    }
+
+    i = height;
+    while (i--) {
+        steps.push(i);
+    }
+
+    bouncingMotionsCache[key] = steps;  // save steps to the cache
+
+    return steps;
+}
+
+/**
+ * Returns calculated array of delays between animation start and the steps of animation. This
+ * function used to calculate both movement and resizing animations. Element with index i of this
+ * array contains the delay in milliseconds between animation start and the step number i. Those
+ * delays are cached in bouncingMotionsCache. Function checks this cache before make any
+ * calculations.
+ *
+ * @param height {number}  height of movement or resizing (px)
+ * @param speed {number}  speed coefficient
+ * @param prefix {string}  prefix of the key in the cache. Must be any string with trailing "_"
+ *      character
+ *
+ * @return {number[]} array of delays before steps of animation
+ */
+export function calculateDelays(height, speed, prefix) {
+    let key = prefix + height + '_' + speed,
+        deltas = [],    // time between steps of animation
+        delays = [],    // delays before steps from beginning of animation
+        totalDelay = 0,
+        l,
+        i;
+
+    // Check the cache
+    if (bouncingMotionsCache[key]) {
+        return bouncingMotionsCache[key];
+    }
+
+    // Calculate delta time for bouncing animation
+
+    // Delta time to movement in one direction
+    deltas[height] = speed;
+    deltas[0] = 0;
+    i = height;
+    while (--i) {
+        deltas[i] = Math.round(speed / (height - i));
+    }
+
+    // Delta time for movement in two directions
+    i = height;
+    while (i--) {
+        deltas.push(deltas[i]);
+    }
+
+    // Calculate move delays (cumulated deltas)
+    // TODO: instead of deltas.lenght write bounceHeight * 2 - 1
+    for (i = 0, l = deltas.length; i < l; i++) {
+        totalDelay += deltas[i];
+        delays.push(totalDelay);
+    }
+
+    // Save move delays to cache
+    bouncingMotionsCache[key] = delays;
+
+    return delays;
 }

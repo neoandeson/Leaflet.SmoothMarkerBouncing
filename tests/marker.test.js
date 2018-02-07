@@ -2,7 +2,7 @@ import test from 'ava';
 import L from 'leaflet';
 import '../src/marker';
 
-test('Tests marker#setBouncingOptions', t => {
+test('Test marker#setBouncingOptions', t => {
 
     // Given
     const marker = L.marker([48.847547, 2.351074]);
@@ -25,7 +25,7 @@ test('Tests marker#setBouncingOptions', t => {
     });
 });
 
-test('Tests Marker#setBouncingOptions', t => {
+test('Test Marker#setBouncingOptions', t => {
 
     // Given
 

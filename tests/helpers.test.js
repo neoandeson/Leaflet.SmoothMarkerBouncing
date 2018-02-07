@@ -1,7 +1,7 @@
 import test from 'ava';
 import * as Helpers from '../src/helpers';
 
-test('Tests parseCssText', t => {
+test('Test parseCssText', t => {
 
     // Given
     const cssText = 'margin-left: -12px; margin-top: -41px; width: 25px; height: 41px;';
@@ -18,7 +18,7 @@ test('Tests parseCssText', t => {
     });
 });
 
-test('Tests renderCssText', t => {
+test('Test renderCssText', t => {
 
     // Given
     const styleDefinitions = {
@@ -38,13 +38,13 @@ test('Tests renderCssText', t => {
     t.true(cssText.includes('height: 41px;'));
 });
 
-test('Tests calculateLine', t => {
+test('Test calculateLine', t => {
 
     // Given
     const x = 100,
         y = 100,
         angle = - Math.PI / 4,
-        length = 30;
+        length = 15;
 
     // When
     const line = Helpers.calculateLine(x, y, angle, length);
@@ -65,31 +65,16 @@ test('Tests calculateLine', t => {
         [ 111, 89 ],
         [ 112, 88 ],
         [ 113, 87 ],
-        [ 114, 86 ],
-        [ 115, 85 ],
-        [ 116, 84 ],
-        [ 117, 83 ],
-        [ 118, 82 ],
-        [ 119, 81 ],
-        [ 120, 80 ],
-        [ 121, 79 ],
-        [ 122, 78 ],
-        [ 123, 77 ],
-        [ 124, 76 ],
-        [ 125, 75 ],
-        [ 126, 74 ],
-        [ 127, 73 ],
-        [ 128, 72 ],
-        [ 129, 71 ]
+        [ 114, 86 ]
     ]);
 });
 
-test('Tests calculateIconMovePoints', t => {
+test('Test calculateIconMovePoints', t => {
 
     // Given
     const x = 100,
         y = 100,
-        length = 30;
+        length = 15;
 
     // When
     const points = Helpers.calculateIconMovePoints(x, y, length);
@@ -111,31 +96,16 @@ test('Tests calculateIconMovePoints', t => {
         [ 100, 88 ],
         [ 100, 87 ],
         [ 100, 86 ],
-        [ 100, 85 ],
-        [ 100, 84 ],
-        [ 100, 83 ],
-        [ 100, 82 ],
-        [ 100, 81 ],
-        [ 100, 80 ],
-        [ 100, 79 ],
-        [ 100, 78 ],
-        [ 100, 77 ],
-        [ 100, 76 ],
-        [ 100, 75 ],
-        [ 100, 74 ],
-        [ 100, 73 ],
-        [ 100, 72 ],
-        [ 100, 71 ],
-        [ 100, 70 ]
+        [ 100, 85 ]
     ]);
 });
 
-test('Tests calculateShadowMovePoints with angle', t => {
+test('Test calculateShadowMovePoints with angle', t => {
 
     // Given
     const x = 100,
         y = 100,
-        bounceHeight = 30,
+        bounceHeight = 15,
         angle = - Math.PI / 4;
 
     // When
@@ -158,26 +128,11 @@ test('Tests calculateShadowMovePoints with angle', t => {
         [ 112, 88 ],
         [ 113, 87 ],
         [ 114, 86 ],
-        [ 115, 85 ],
-        [ 116, 84 ],
-        [ 117, 83 ],
-        [ 118, 82 ],
-        [ 119, 81 ],
-        [ 120, 80 ],
-        [ 121, 79 ],
-        [ 122, 78 ],
-        [ 123, 77 ],
-        [ 124, 76 ],
-        [ 125, 75 ],
-        [ 126, 74 ],
-        [ 127, 73 ],
-        [ 128, 72 ],
-        [ 129, 71 ],
-        [ 130, 70 ],
+        [ 115, 85 ]
     ]);
 });
 
-test('Tests calculateShadowMovePoints with null angle', t => {
+test('Test calculateShadowMovePoints without angle', t => {
 
     // Given
     const x = 100,
@@ -185,7 +140,7 @@ test('Tests calculateShadowMovePoints with null angle', t => {
         bounceHeight = 5;
 
     // When
-    const points = Helpers.calculateShadowMovePoints(x, y, bounceHeight, null);
+    const points = Helpers.calculateShadowMovePoints(x, y, bounceHeight);
 
     // Then
     t.deepEqual(points, [
@@ -195,5 +150,177 @@ test('Tests calculateShadowMovePoints with null angle', t => {
         [ 100, 100 ],
         [ 100, 100 ],
         [ 100, 100 ]
+    ]);
+});
+
+test('Test calculateIconMoveTransforms', t => {
+
+    // Given
+    const x = 100,
+        y = 100,
+        bounceHeight = 15;
+
+    // When
+    const transforms = Helpers.calculateIconMoveTransforms(x, y, bounceHeight);
+
+    // Then
+    t.deepEqual(transforms, [
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,99,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,98,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,97,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,96,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,95,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,94,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,93,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,92,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,91,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,90,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,89,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,88,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,87,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,86,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,85,0,1) '
+    ]);
+});
+
+test('Test calculateShadowMoveTransforms with angle', t => {
+
+    // Given
+    const x = 100,
+        y = 100,
+        bounceHeight = 15,
+        angle = - Math.PI / 4;
+
+    // When
+    const transforms = Helpers.calculateShadowMoveTransforms(x, y, bounceHeight, angle);
+
+    // Then
+    t.deepEqual(transforms, [
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,101,99,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,102,98,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,103,97,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,104,96,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,105,95,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,106,94,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,107,93,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,108,92,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,109,91,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,110,90,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,111,89,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,112,88,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,113,87,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,114,86,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,115,85,0,1) '
+    ]);
+});
+
+test('Test calculateShadowMoveTransforms without angle', t => {
+
+    // Given
+    const x = 100,
+        y = 100,
+        bounceHeight = 15;
+
+    // When
+    const transforms = Helpers.calculateShadowMoveTransforms(x, y, bounceHeight);
+
+    // Then
+    t.deepEqual(transforms, [
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) ',
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) '
+    ]);
+});
+
+test('Test calculateIconResizeTransforms', t => {
+
+    // Given
+    const x = 100,
+        y = 100,
+        height = 41,
+        contractHeight = 12;
+
+    // When
+    const transforms = Helpers.calculateIconResizeTransforms(x, y, height, contractHeight);
+
+    // Then
+    t.deepEqual(transforms, [
+        ' matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,0,1) ',
+        ' matrix3d(1,0,0,0,0,0.975609756097561,0,0,0,0,1,0,100,101,0,1) ',
+        ' matrix3d(1,0,0,0,0,0.9512195121951219,0,0,0,0,1,0,100,102,0,1) ',
+        ' matrix3d(1,0,0,0,0,0.926829268292683,0,0,0,0,1,0,100,103,0,1) ',
+        ' matrix3d(1,0,0,0,0,0.9024390243902439,0,0,0,0,1,0,100,104,0,1) ',
+        ' matrix3d(1,0,0,0,0,0.8780487804878049,0,0,0,0,1,0,100,105,0,1) ',
+        ' matrix3d(1,0,0,0,0,0.8536585365853658,0,0,0,0,1,0,100,106,0,1) ',
+        ' matrix3d(1,0,0,0,0,0.8292682926829268,0,0,0,0,1,0,100,107,0,1) ',
+        ' matrix3d(1,0,0,0,0,0.8048780487804879,0,0,0,0,1,0,100,108,0,1) ',
+        ' matrix3d(1,0,0,0,0,0.7804878048780488,0,0,0,0,1,0,100,109,0,1) ',
+        ' matrix3d(1,0,0,0,0,0.7560975609756098,0,0,0,0,1,0,100,110,0,1) ',
+        ' matrix3d(1,0,0,0,0,0.7317073170731707,0,0,0,0,1,0,100,111,0,1) ',
+        ' matrix3d(1,0,0,0,0,0.7073170731707317,0,0,0,0,1,0,100,112,0,1) '
+    ]);
+});
+
+test('Test calculateSteps', t => {
+
+    // Given
+    const height = 5,
+        prefix = 'moveSteps_';
+
+    // When
+    const steps = Helpers.calculateSteps(height, prefix);
+
+    // Then
+    t.deepEqual(steps, [1, 2, 3, 4, 5, 4, 3, 2, 1, 0]);
+});
+
+test('Test calculateDelays', t => {
+
+    // Given
+    const height = 10,
+        speed = 52,
+        prefix = 'moveSteps_';
+
+    // When
+    const delays = Helpers.calculateDelays(height, speed, prefix);
+
+    // Then
+    t.deepEqual(delays, [
+        0,
+        6,
+        13,
+        20,
+        29,
+        39,
+        52,
+        69,
+        95,
+        147,
+        199,
+        251,
+        277,
+        294,
+        307,
+        317,
+        326,
+        333,
+        340,
+        346,
+        346
     ]);
 });
